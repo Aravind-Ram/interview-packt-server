@@ -6,6 +6,11 @@ available products.
 
 ## Deployment
 
+* to Install dependency libraries run command from the project directory
+```bash
+  composer install
+```
+
 * Create Database and update name on **.env** file 
 ```bash
   DB_DATABASE=packt_assignment
