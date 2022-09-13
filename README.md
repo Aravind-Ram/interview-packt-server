@@ -1,64 +1,283 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Packt Interview ( Server )
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+The client has requested that there be a search page and a product page as a bare
+minimum with the idea that a user will input a title of a book and be given a list of
+available products.
 
-## About Laravel
+## Deployment
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* Create Database and update name on **.env** file 
+```bash
+  DB_DATABASE=packt_assignment
+  DB_USERNAME=root
+  DB_PASSWORD=*****
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* Generate symbolic link for storage folder
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```bash
+  php artisan storage:link
+```
 
-## Learning Laravel
+To deploy this project run
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```bash
+  php artisan serve
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+## API Reference
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+#### Get books collections
 
-### Premium Partners
+```http
+  GET /api/book-collections
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `q` | `string` | **Nullable**. Search Parameter |
+| `page` | `number` | **Nullable**.Pagination number |
+| `author_id` | `uuid` | **Nullable**. Author ID should be exists in authors |
+| `publisher_id` | `uuid` | **Nullable**. Publisher ID should be exists in publishers |
+| `genre_id` | `uuid` | **Nullable**. Genre ID shoule be exists in genres |
 
-## Contributing
+#### Get all books
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```http
+  GET /api/book
+```
 
-## Code of Conduct
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `q` | `string` | Search Parameter |
+| `page` | `number` | Pagination number |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### Get single book
 
-## Security Vulnerabilities
+```http
+  GET /api/book/${id}
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to fetch |
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### Create book
+
+```http
+  POST /api/book
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `title`      | `string` | **Required**. |
+| `genre_id`   | `string` | **Required**. Should be exists in genres |
+| `author_id`   | `string` | **Required**. Should be exists in authors |
+| `publisher_id`   | `string` | **Required**. Should be exists in publishers |
+| `publisher_at`   | `date` | **Required**. Published Date |
+| `isbn`   | `numeric` | **Required, Unique**. Unique number to identify |
+| `description`   | `string` | **Nullable**. |
+| `gallery_id`   | `string` | **Required**. Uploaded image uuid | 
+
+
+#### Update book
+
+```http
+  PUT /api/book/${id}
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `title`      | `string` | **Required**. |
+| `genre_id`   | `string` | **Required**. Should be exists in genres |
+| `author_id`   | `string` | **Required**. Should be exists in authors |
+| `publisher_id`   | `string` | **Required**. Should be exists in publishers |
+| `publisher_at`   | `date` | **Required**. Published Date |
+| `isbn`   | `numeric` | **Required, Unique**. Unique number to identify |
+| `description`   | `string` | **Nullable**. |
+| `gallery_id`   | `string` | **Required**. | Uploaded image uuid
+
+#### Delete book
+
+```http
+  DELETE /api/book/${id}
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to delete |
+
+------------
+------------
+
+#### Get all author
+
+```http
+  GET /api/author
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `q` | `string` | Search Parameter |
+| `page` | `number` | Pagination number |
+
+#### Get single author
+
+```http
+  GET /api/author/${id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to fetch |
+
+
+#### Create Author
+
+```http
+  POST /api/author
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `author_name`      | `string` | **Required, Unique**. Author name to choose for book|
+| `email`   | `string` | **Required, Unique**. |
+| `phone_number`   | `string` | **Required, Unique**. |
+| `address`   | `string` | **Nullable**. |
+
+
+#### Update author
+
+```http
+  PUT /api/author/${id}
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `author_name`      | `string` | **Required, Unique**. Author name to choose for book|
+| `email`   | `string` | **Required, Unique**. |
+| `phone_number`   | `string` | **Required, Unique**. |
+| `address`   | `string` | **Nullable**. |
+
+#### Delete author
+
+```http
+  DELETE /api/author/${id}
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to delete |
+
+
+------------
+------------
+
+#### Get all publisher
+
+```http
+  GET /api/publisher
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `q` | `string` | Search Parameter |
+| `page` | `number` | Pagination number |
+
+#### Get single author
+
+```http
+  GET /api/publisher/${id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to fetch |
+
+
+#### Create publisher
+
+```http
+  POST /api/publisher
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `publisher_name`      | `string` | **Required, Unique**. Author name to choose for book|
+| `email`   | `string` | **Required, Unique**. |
+| `phone_number`   | `string` | **Required, Unique**. |
+| `address`   | `string` | **Nullable**. |
+
+
+#### Update publisher
+
+```http
+  PUT /api/publisher/${id}
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `publisher_name`      | `string` | **Required, Unique**. Author name to choose for book|
+| `email`   | `string` | **Required, Unique**. |
+| `phone_number`   | `string` | **Required, Unique**. |
+| `address`   | `string` | **Nullable**. |
+
+#### Delete publisher
+
+```http
+  DELETE /api/publisher/${id}
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to delete |
+
+
+------------
+------------
+
+#### Get all genre
+
+```http
+  GET /api/genre
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `q` | `string` | Search Parameter |
+| `page` | `number` | Pagination number |
+
+#### Get single genre
+
+```http
+  GET /api/genre/${id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to fetch |
+
+
+#### Create genre
+
+```http
+  POST /api/genre
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `genre_name`      | `string` | **Required, Unique**. Author name to choose for book|
+| `description`   | `string` | **Nullable**. |
+
+
+#### Update genre
+
+```http
+  PUT /api/genre/${id}
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `genre_name`      | `string` | **Required, Unique**. Author name to choose for book|
+| `description`   | `string` | **Nullable**. |
+
+#### Delete genre
+
+```http
+  DELETE /api/genre/${id}
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to delete |
+
