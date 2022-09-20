@@ -144,7 +144,7 @@ class BookController extends Controller
             ->orWhere('isbn', 'LIKE', "%$request->q%");
         })
         ->when($request->publishers, function ($query) use ($request) {
-            return $query->whereHas('publishers', function($subQuery) use($request) {
+            return $query->whereHas('publisher', function($subQuery) use($request) {
                 return $subQuery->whereIn('slug', $request->publishers);
             });
         })
