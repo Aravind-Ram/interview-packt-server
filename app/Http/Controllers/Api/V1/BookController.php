@@ -137,19 +137,26 @@ class BookController extends Controller
 
     public function collections(Request $request)
     {
+        // return response()->json($request->authors);
         $model = Book::select('uuid', 'title', 'genre_id', 'author_id', 'publisher_id', 'gallery_id', 'slug', 'description', 'isbn', 'published_at', 'created_at')
         ->when($request->q, function ($query) use ($request) {              
             return $query->where('title', 'LIKE', "%$request->q%")
             ->orWhere('isbn', 'LIKE', "%$request->q%");
         })
-        ->when($request->publisher_id, function ($query) use ($request) {
-            return $query->orWhereRelation('publisher', 'uuid', $request->publisher_id);
+        ->when($request->publishers, function ($query) use ($request) {
+            return $query->whereHas('publishers', function($subQuery) use($request) {
+                return $subQuery->whereIn('slug', $request->publishers);
+            });
         })
-        ->when($request->genre_id, function ($query) use ($request) {
-            return $query->orWhereRelation('genre', 'uuid', $request->genre_id);
+        ->when($request->genres, function ($query) use ($request) {
+            return $query->whereHas('genre', function($subQuery) use($request) {
+                return $subQuery->whereIn('slug', $request->genres);
+            });
         })
-        ->when($request->author_id, function ($query) use ($request) {
-            return $query->orWhereRelation('author', 'uuid', $request->author_id);
+        ->when($request->authors, function ($query) use ($request) {
+            return $query->whereHas('author', function($subQuery) use($request) {
+                return $subQuery->whereIn('slug', $request->authors);
+            });
         })
         ->with(['genre', 'author', 'publisher', 'gallery'])
         ->paginate(100);

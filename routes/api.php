@@ -44,7 +44,6 @@ Route::prefix('v1')->group(function () {
     Route::get('genre-options', [GenreController::class, 'options']);
     Route::get('author-options', [AuthorController::class, 'options']);
     Route::get('publisher-options', [PublisherController::class, 'options']);
-
     Route::get('book-collections', [BookController::class, 'collections']);    
 });
 

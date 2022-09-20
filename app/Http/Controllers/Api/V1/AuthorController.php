@@ -109,7 +109,7 @@ class AuthorController extends Controller
 
     public function options()
     {
-        $authors = Author::select('uuid', 'author_name')->where('status', ITEM_STATUS_ACTIVE)->get();
+        $authors = Author::select('uuid', 'slug', 'author_name')->where('status', ITEM_STATUS_ACTIVE)->get();
         $response = [
             'status' => 'OK',
             'code' => 200,

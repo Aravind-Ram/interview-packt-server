@@ -109,7 +109,7 @@ class PublisherController extends Controller
 
     public function options()
     {
-        $publishers = Publisher::select('uuid', 'publisher_name')->where('status', ITEM_STATUS_ACTIVE)->get();
+        $publishers = Publisher::select('uuid', 'slug', 'publisher_name')->where('status', ITEM_STATUS_ACTIVE)->get();
         $response = [
             'status' => 'OK',
             'code' => 200,

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Str;
 use App\Traits\Uuid;
 
 class Genre extends Model
@@ -19,6 +20,7 @@ class Genre extends Model
      */
     protected $fillable = [
         'genre_name',
+        'slug',
         'description',
     ];
 
@@ -38,5 +40,26 @@ class Genre extends Model
     public function book()
     {
         return $this->hasMany(Book::class);
+    }
+
+    public function setGenreNameAttribute($value)
+    {
+        $this->attributes['genre_name'] = $value;
+        $slugValue = Str::slug($value);
+        if (static::whereSlug($slugValue)->exists()) {
+
+            $slugValue = $this->incrementSlug($slugValue);
+        }
+        $this->attributes['slug'] = Str::slug($value);
+    }
+
+    public function incrementSlug($slug) {
+        $original = $slug;
+        $count = 2;
+        while (static::whereSlug($slug)->exists()) {
+    
+            $slug = "{$original}-" . $count++;
+        }
+        return $slug;    
     }
 }

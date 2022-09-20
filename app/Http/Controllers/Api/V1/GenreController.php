@@ -104,9 +104,10 @@ class GenreController extends Controller
         return response()->json($response, 200);
     }
 
-    public function options()
+    public function options(Request $request)
     {
-        $genres = Genre::select('uuid', 'genre_name')->where('status', ITEM_STATUS_ACTIVE)->get();
+
+        $genres = Genre::select('uuid', 'slug', 'genre_name')->where('status', ITEM_STATUS_ACTIVE)->get();
         $response = [
             'status' => 'OK',
             'code' => 200,
